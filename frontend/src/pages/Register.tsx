@@ -21,12 +21,11 @@ export const Register: React.FC = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    setError('');
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError('');
+    e.stopPropagation();
 
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
@@ -39,6 +38,7 @@ export const Register: React.FC = () => {
     }
 
     setLoading(true);
+    setError('');
 
     try {
       const response = await authService.register({
@@ -51,13 +51,17 @@ export const Register: React.FC = () => {
 
       navigate('/documents');
     } catch (err: any) {
+      console.error('Register error caught:', err);
       setError(
         err.response?.data?.error ||
           err.response?.data?.errors?.[0]?.msg ||
           'Registration failed. Please try again.'
       );
-    } finally {
       setLoading(false);
+    } finally {
+      if (loading) {
+        setLoading(false);
+      }
     }
   };
 
@@ -85,8 +89,6 @@ export const Register: React.FC = () => {
               label="Username"
               value={formData.username}
               onChange={handleChange}
-              required
-              minLength={3}
               placeholder="Enter your username"
             />
 
@@ -97,8 +99,6 @@ export const Register: React.FC = () => {
               label="Password"
               value={formData.password}
               onChange={handleChange}
-              required
-              minLength={6}
               placeholder="Enter your password"
             />
 
@@ -109,7 +109,6 @@ export const Register: React.FC = () => {
               label="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              required
               placeholder="Confirm your password"
             />
 

@@ -20,13 +20,14 @@ export const Login: React.FC = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    setError('');
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError('');
+    e.stopPropagation();
+
     setLoading(true);
+    setError('');
 
     try {
       const response = await authService.login(formData);
@@ -36,13 +37,16 @@ export const Login: React.FC = () => {
 
       navigate('/documents');
     } catch (err: any) {
-      setError(
-        err.response?.data?.error ||
+      console.error('Login error caught:', err);
+      const errorMessage = err.response?.data?.error ||
           err.response?.data?.errors?.[0]?.msg ||
-          'Login failed. Please try again.'
-      );
-    } finally {
+          'Login failed. Please try again.';
+      setError(errorMessage);
       setLoading(false);
+    } finally {
+      if (loading) {
+        setLoading(false);
+      }
     }
   };
 
@@ -70,7 +74,6 @@ export const Login: React.FC = () => {
               label="Username"
               value={formData.username}
               onChange={handleChange}
-              required
               placeholder="Enter your username"
             />
 
@@ -81,7 +84,6 @@ export const Login: React.FC = () => {
               label="Password"
               value={formData.password}
               onChange={handleChange}
-              required
               placeholder="Enter your password"
             />
 
