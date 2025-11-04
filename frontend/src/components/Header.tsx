@@ -12,7 +12,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-gradient-to-r from-white to-gray-200 text-white shadow-lg">
+    <header className="bg-linear-to-r from-white to-gray-200 text-white shadow-lg">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <FileText className="w-8 h-8 text-blue-500" strokeWidth={2} />

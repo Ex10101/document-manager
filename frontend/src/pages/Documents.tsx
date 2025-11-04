@@ -12,9 +12,14 @@ export const Documents: React.FC = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingDocument, setEditingDocument] = useState<Document | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(() => {
+    const saved = localStorage.getItem('documents_currentPage');
+    return saved ? parseInt(saved, 10) : 1;
+  });
   const [totalPages, setTotalPages] = useState(1);
-  const [selectedTag, setSelectedTag] = useState('');
+  const [selectedTag, setSelectedTag] = useState(() => {
+    return localStorage.getItem('documents_selectedTag') || '';
+  });
   const [availableTags, setAvailableTags] = useState<string[]>([]);
 
   const fetchDocuments = async () => {
@@ -44,6 +49,16 @@ export const Documents: React.FC = () => {
     }
   };
 
+  // Persist currentPage to localStorage
+  useEffect(() => {
+    localStorage.setItem('documents_currentPage', currentPage.toString());
+  }, [currentPage]);
+
+  // Persist selectedTag to localStorage
+  useEffect(() => {
+    localStorage.setItem('documents_selectedTag', selectedTag);
+  }, [selectedTag]);
+
   useEffect(() => {
     fetchDocuments();
     fetchTags();
@@ -52,6 +67,7 @@ export const Documents: React.FC = () => {
   const handleAddDocument = async (data: { title: string; tag: string; file: File }) => {
     await documentService.createDocument(data);
     setCurrentPage(1);
+    localStorage.setItem('documents_currentPage', '1');
     await fetchDocuments();
     await fetchTags();
   };
@@ -65,7 +81,17 @@ export const Documents: React.FC = () => {
   const handleDeleteDocument = async (id: number) => {
     try {
       await documentService.deleteDocument(id);
-      await fetchDocuments();
+
+      // If we're deleting the last document on a page that's not the first page,
+      // navigate to the previous page
+      if (documents.length === 1 && currentPage > 1) {
+        const newPage = currentPage - 1;
+        setCurrentPage(newPage);
+        localStorage.setItem('documents_currentPage', newPage.toString());
+      } else {
+        await fetchDocuments();
+      }
+
       await fetchTags();
     } catch (err: any) {
       alert(err.response?.data?.error || 'Failed to delete document');
@@ -88,6 +114,8 @@ export const Documents: React.FC = () => {
   const handleTagFilter = (tag: string) => {
     setSelectedTag(tag);
     setCurrentPage(1);
+    localStorage.setItem('documents_selectedTag', tag);
+    localStorage.setItem('documents_currentPage', '1');
   };
 
   return (
