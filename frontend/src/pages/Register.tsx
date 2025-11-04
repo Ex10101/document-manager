@@ -90,6 +90,7 @@ export const Register: React.FC = () => {
               value={formData.username}
               onChange={handleChange}
               placeholder="Enter your username"
+              maxLength={50}
             />
 
             <Input
