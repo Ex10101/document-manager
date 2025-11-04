@@ -120,13 +120,13 @@ export const Documents: React.FC = () => {
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">My Documents</h2>
+      <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">My Documents</h2>
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-medium"
+              className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-medium"
             >
               Add Document
             </button>
@@ -141,7 +141,7 @@ export const Documents: React.FC = () => {
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => handleTagFilter('')}
-                  className={`px-4 py-2 rounded-lg transition font-medium ${
+                  className={`px-3 sm:px-4 py-2 rounded-lg transition font-medium text-sm sm:text-base ${
                     selectedTag === ''
                       ? 'bg-blue-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -153,7 +153,7 @@ export const Documents: React.FC = () => {
                   <button
                     key={tag}
                     onClick={() => handleTagFilter(tag)}
-                    className={`px-4 py-2 rounded-lg transition font-medium ${
+                    className={`px-3 sm:px-4 py-2 rounded-lg transition font-medium text-sm sm:text-base ${
                       selectedTag === tag
                         ? 'bg-blue-600 text-white'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -225,21 +225,21 @@ export const Documents: React.FC = () => {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center gap-2 flex-wrap">
                   <button
                     onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
                     disabled={currentPage === 1}
-                    className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3 sm:px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                   >
                     Previous
                   </button>
-                  <span className="text-gray-700">
+                  <span className="text-gray-700 text-sm sm:text-base">
                     Page {currentPage} of {totalPages}
                   </span>
                   <button
                     onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
                     disabled={currentPage === totalPages}
-                    className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3 sm:px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                   >
                     Next
                   </button>
